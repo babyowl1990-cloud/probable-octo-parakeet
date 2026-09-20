@@ -1,6 +1,6 @@
 # TrackLab + Cookie Stash
 
-Two parts:
+Two parts of branches:
 
 - `site/index.html` is a demo page about browser tracking (cookie jar, ad-network profile, fingerprinting).
   It keeps a "where you left off" state in cookies: section, note, visit count, tag.
