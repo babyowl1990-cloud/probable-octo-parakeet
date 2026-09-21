@@ -1,4 +1,4 @@
-# TrackLab + Cookie Stash
+# TrackLab + Cookie Stash (check in brach)
 
 - `site/index.html`: a demo page about browser tracking (cookie jar, a fake ad network, fingerprinting).
   It keeps a "where you left off" state in cookies: section, note, visit count, tag.
