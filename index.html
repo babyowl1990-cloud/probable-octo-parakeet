@@ -177,6 +177,9 @@
 <script>
 (() => {
   const P = "tl_";
+  // Scope cookies to this page's folder ("/" on localhost, "/tracklab/" on GitHub Pages)
+  const BASE = location.pathname.replace(/[^/]*$/, "") || "/";
+  const SECURE = location.protocol === "https:" ? "; Secure" : "";
   const $ = (s) => document.querySelector(s);
   const enc = encodeURIComponent;
   const dec = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
@@ -189,8 +192,8 @@
     }).filter((c) => c.name.startsWith(P));
   }
   const get = (n) => { const c = jar().find((c) => c.name === P + n); return c ? c.value : null; };
-  const set = (n, v) => { document.cookie = `${P}${n}=${enc(v)}; path=/; max-age=31536000; SameSite=Lax`; };
-  const del = (n) => { document.cookie = `${P}${n}=; path=/; max-age=0`; };
+  const set = (n, v) => { document.cookie = `${P}${n}=${enc(v)}; path=${BASE}; max-age=31536000; SameSite=Lax${SECURE}`; };
+  const del = (n) => { document.cookie = `${P}${n}=; path=${BASE}; max-age=0`; };
   // Only write extra cookies while the tag exists, so a half-empty jar never gets created.
   const save = (n, v) => { if (!get("sid")) return false; set(n, v); return true; };
   const rand = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => (b % 36).toString(36)).join("");
@@ -219,7 +222,7 @@
     $("#f-visits").textContent = visits || "none";
     $("#f-sec").textContent = sec ? LABELS[sec] || sec : "none yet";
     $("#setcookie").textContent = sid
-      ? `Set-Cookie: tl_sid=${sid}; Path=/; Max-Age=31536000; SameSite=Lax\n\nCookie: tl_sid=${sid}      <- sent back on every later request`
+      ? `Set-Cookie: tl_sid=${sid}; Path=${BASE}; Max-Age=31536000; SameSite=Lax${SECURE}\n\nCookie: tl_sid=${sid}      <- sent back on every later request`
       : "No tl_sid cookie is set right now.";
   }
 
