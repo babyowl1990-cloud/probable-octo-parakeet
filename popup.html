@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { --ink:#14213d; --mute:#5c6b82; --line:#d5dde8; --bg:#f4f7fb; --acc:#2f5bff; }
+  * { box-sizing: border-box; }
+  body { margin:0; width:320px; font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:14px 16px 10px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  h1 { font-size:15px; margin:0; }
+  label.sw { display:flex; gap:6px; align-items:center; cursor:pointer; color:var(--mute); }
+  main { padding:12px 16px 16px; }
+  .row { display:flex; justify-content:space-between; padding:3px 0; color:var(--mute); }
+  .row b { color:var(--ink); font-weight:600; }
+  h2 { font-size:12px; margin:14px 0 4px; color:var(--mute); font-weight:600; }
+  ul { list-style:none; margin:0; padding:0; border:1px solid var(--line); border-radius:6px; background:#fff; max-height:120px; overflow:auto; }
+  li { padding:5px 8px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:8px; }
+  li:last-child { border-bottom:0; }
+  li span:last-child { color:var(--mute); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:150px; }
+  li.empty { color:var(--mute); justify-content:center; }
+  .btns { display:grid; gap:6px; margin-top:14px; }
+  button { font:inherit; padding:7px 10px; border-radius:6px; border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; text-align:left; }
+  button:hover { border-color:var(--acc); }
+  button:focus-visible { outline:2px solid var(--acc); outline-offset:1px; }
+  small { display:block; margin-top:12px; color:var(--mute); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cookie Stash</h1>
+  <label class="sw"><input type="checkbox" id="enabled"> Auto</label>
+</header>
+<main>
+  <div class="row"><span>Site tabs open</span><b id="tabs">0</b></div>
+  <div class="row"><span>Stash last saved</span><b id="saved">–</b></div>
+
+  <h2>In the browser right now</h2>
+  <ul id="jar"></ul>
+
+  <h2>In the stash</h2>
+  <ul id="stash"></ul>
+
+  <div class="btns">
+    <button id="restore">Put stashed cookies back now</button>
+    <button id="wipe">Remove site cookies now (act like I left)</button>
+    <button id="clear">Delete the stash</button>
+  </div>
+  <small>Works only on <span id="site"></span> and only on cookies starting with tl_.</small>
+</main>
+<script src="config.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
