@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { --ink:#14213d; --mute:#5c6b82; --line:#d5dde8; --bg:#f4f7fb; --acc:#2f5bff; --warn:#c2255c; --ok:#1b7f5c; }
+  * { box-sizing:border-box; }
+  body { margin:0; width:340px; font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  nav { display:flex; border-bottom:1px solid var(--line); background:#fff; }
+  nav button { flex:1; border:0; background:none; padding:11px 4px; font:inherit; font-weight:600; color:var(--mute); cursor:pointer; border-bottom:3px solid transparent; }
+  nav button[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--acc); }
+  nav button:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid var(--acc); outline-offset:1px; }
+  main { padding:12px 14px 16px; max-height:520px; overflow:auto; }
+  section[hidden] { display:none; }
+  h2 { font-size:12px; margin:14px 0 5px; color:var(--mute); font-weight:600; }
+  h2:first-child { margin-top:0; }
+  p { margin:0 0 8px; }
+  .mute { color:var(--mute); }
+  .small { font-size:12px; }
+  input[type=password], select { width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:6px; font:inherit; margin-bottom:6px; background:#fff; color:var(--ink); }
+  button.b { font:inherit; padding:6px 10px; border-radius:6px; border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; }
+  button.b:hover { border-color:var(--acc); }
+  button.b.primary { background:var(--acc); border-color:var(--acc); color:#fff; }
+  button.b.danger { color:var(--warn); }
+  .row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:99px; font-weight:600; font-size:12px; background:#e4ecff; }
+  .pill.ok { background:#dcf3ea; color:var(--ok); }
+  .pill.lock { background:#fde3ec; color:var(--warn); }
+  label.tg { display:flex; gap:8px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--line); cursor:pointer; }
+  label.tg input { margin-top:3px; }
+  ul.list { list-style:none; margin:0 0 8px; padding:0; border:1px solid var(--line); border-radius:6px; background:#fff; }
+  ul.list li { padding:8px 10px; border-bottom:1px solid var(--line); }
+  ul.list li:last-child { border-bottom:0; }
+  ul.list li.empty { color:var(--mute); text-align:center; }
+  .k { font-weight:600; word-break:break-all; }
+  .tag { font-size:11px; font-weight:600; padding:1px 6px; border-radius:4px; }
+  .tag.seen { background:#fff1d6; color:#8a5a00; }
+  .tag.blocked { background:#fde3ec; color:var(--warn); }
+  .msg { min-height:18px; color:var(--warn); }
+  .msg.good { color:var(--ok); }
+</style>
+</head>
+<body>
+<nav role="tablist">
+  <button role="tab" data-tab="vault" aria-selected="true">Vault</button>
+  <button role="tab" data-tab="site" aria-selected="false">This site</button>
+  <button role="tab" data-tab="guard" aria-selected="false">Ad guard</button>
+</nav>
+<main>
+  <p class="msg" id="msg" aria-live="polite"></p>
+
+  <section id="tab-vault">
+    <div class="row" style="margin-bottom:8px"><span class="pill" id="vstate">…</span></div>
+
+    <div id="v-new" hidden>
+      <p class="small mute">Your stashed cookies are encrypted with a passphrase that is never stored. Forget it and the vault cannot be recovered.</p>
+      <input type="password" id="pass1" placeholder="New passphrase (8+ characters)" autocomplete="new-password">
+      <input type="password" id="pass2" placeholder="Repeat passphrase" autocomplete="new-password">
+      <button class="b primary" id="do-setup">Create vault</button>
+    </div>
+
+    <div id="v-locked" hidden>
+      <p class="small mute">While the vault is locked, nothing is removed from or restored to the browser.</p>
+      <input type="password" id="pass-unlock" placeholder="Passphrase" autocomplete="current-password">
+      <div class="row">
+        <button class="b primary" id="do-unlock">Unlock</button>
+        <button class="b danger" id="do-reset">Delete vault…</button>
+      </div>
+    </div>
+
+    <div id="v-open" hidden>
+      <div class="row" style="margin-bottom:6px">
+        <button class="b" id="do-lock">Lock now</button>
+        <label class="row small"><input type="checkbox" id="enabled"> Auto</label>
+      </div>
+      <h2>Sites in the vault</h2>
+      <ul class="list" id="sites"></ul>
+    </div>
+  </section>
+
+  <section id="tab-site" hidden>
+    <h2>Current page</h2>
+    <p class="k" id="cur">…</p>
+    <p class="small mute" id="cur-note"></p>
+    <label class="tg"><input type="checkbox" id="t-isolate">
+      <span>Keep this site's cookies in the encrypted vault while I'm away<br><span class="mute small">Removed when you leave, restored when you return.</span></span></label>
+    <label class="tg"><input type="checkbox" id="t-allow">
+      <span>Trust this site's ad cookies<br><span class="mute small">The guard won't alert on or block this domain.</span></span></label>
+  </section>
+
+  <section id="tab-guard" hidden>
+    <h2>Advertising trackers only</h2>
+    <select id="mode" aria-label="Guard mode">
+      <option value="off">Off</option>
+      <option value="alert">Alert me</option>
+      <option value="block">Block (remove the cookie)</option>
+    </select>
+    <p class="small mute" id="mode-note"></p>
+    <div id="allsites-row" class="row" style="margin-bottom:8px">
+      <span class="small mute" id="allsites-text"></span>
+      <button class="b" id="do-allsites" hidden>Watch all sites</button>
+    </div>
+    <div class="row" style="margin-bottom:6px">
+      <button class="b" id="do-scan">Scan now</button>
+      <button class="b" id="do-clear">Clear list</button>
+    </div>
+    <h2>Detected</h2>
+    <ul class="list" id="dets"></ul>
+    <h2>Trusted domains</h2>
+    <ul class="list" id="allow"></ul>
+  </section>
+</main>
+<script src="popup.js"></script>
+</body>
+</html>

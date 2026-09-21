@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "TrackLab Cookie Stash",
+  "version": "2.0.0",
+  "description": "An encrypted cookie vault for sites you choose, plus a guard that flags or removes advertising-tracker cookies.",
+  "permissions": ["cookies", "storage", "tabs", "webNavigation", "notifications"],
+  "host_permissions": ["http://localhost/*"],
+  "optional_host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TrackLab Cookie Stash",
+    "default_icon": { "48": "icon48.png", "128": "icon128.png" }
+  },
+  "icons": { "48": "icon48.png", "128": "icon128.png" }
+}
