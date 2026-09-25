@@ -1,5 +1,7 @@
 # TrackLab + Cookie Stash (check in branch)
 
+- keep in mind that this is a test project for cookies valt.
+
 - `site/index.html`: a demo page about browser tracking (cookie jar, a fake ad network, fingerprinting).
   It keeps a "where you left off" state in cookies: section, note, visit count, tag.
 - `extension/`: a Chrome/Edge/Brave (Manifest V3) extension with two independent modules.
